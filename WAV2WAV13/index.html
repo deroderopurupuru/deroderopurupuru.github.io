@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ワンショットWAV13作るやつ</title>
+    <!-- <script type="text/javascript" src="rateconv.js"></script> -->
+    <script type="text/javascript" src="index.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>
+        <h1>ワンショットWAV13作るやつ</h1>
+    </header>
+    <div class="main">
+        <h2>サンプリングレート変換</h2>
+        <section class="settings">
+            <div class="item file">
+                <span class="item-name">WAVファイル</span>
+                <input id="file" type="file" />
+                <span id="fileCaption" class="input-caption">RIFF WAVE形式のファイル</span>
+            </div>
+            <div class="item">
+                <label>
+                    <span class="item-name">テンポ(BPM)</span>
+                    <input id="tempo" type="text" value="120.00" />
+                    <span class="input-caption">小数第二位までの正の整数</span>
+                </label>
+            </div>
+            <div class="item">
+                <label>
+                    <span class="item-name">バンク再生時間(tick)</span>
+                    <input id="tick" type="text" value="8" />
+                    <span class="input-caption">小さいほど高音質 & 文字数増</span>
+                </label>
+            </div>
+            <div class="item">
+                <label>
+                    <span class="item-name">最大サンプル数</span>
+                    <input id="wav13MaxLen" type="text" value="1024" />
+                    <span class="input-caption">通常は1024</span>
+                </label>
+            </div>
+            <div class="item">
+                <span class="item-name">ノーマライズ</span>
+                <label>
+                    <input type="radio" name="normalize" value="true" />
+                    <span>する</span>
+                </label>
+                <label>
+                    <input type="radio" name="normalize" value="false" checked="checked" />
+                    <span>しない</span>
+                </label>
+                <span class="input-caption">変換前に音量を最大化</span>
+            </div>
+            <div class="item">
+                <button id="convRate">出力</button>
+                <span class="progress" id="progress"></span>
+                <span id="convCaption"></span>
+            </div>
+        </section>
+        <h2>MML出力</h2>
+        <section class="settings">
+            <div class="item">
+                <span class="item-name">WAV13開始番号</span>
+                <span>@13-</span><input id="wav13FastNum" type="text" value="0">
+                <span class="input-caption">@13-0 @13-1 ... 的な</span>
+            </div>
+            <div class="item">
+                <span class="item-name">マクロの名前のベース</span>
+                <span>$</span><input id="macroBaseName" type="text" value="M">
+                <span class="input-caption">$M8 $M16 ... 的な</span>
+            </div>
+            <div class="item">
+                <span class="item-name">出力マクロを選ぶ</span>
+                <div id="ac2Trigger">
+                    <span id="ac2Icon" class="ac-icon-close"></span>
+                    <span id="ac2Summary" class="ac-summary">選ぶ</span>
+                </div>
+                <div id="ac2Content" class="ac-content-close">
+                    <div id="macroList">
+                    </div>
+                </div>
+                <span class="input-caption">演奏用マクロを選ぶ(長さ別)</span>
+            </div>
+            <div class="item">
+                <span class="item-name">MML</span>
+                <div>
+                    <label>
+                        <input id="outMacroDef" type="checkbox" checked="checked"><span>マクロ定義</span>
+                    </label>
+                    <label>
+                        <input id="outWAV13Def" type="checkbox" checked="checked"><span>WAV13定義</span>
+                    </label>
+                    <label>
+                        <input id="outPlayTrack" type="checkbox" checked="checked"><span>演奏用トラック</span>
+                    </label>
+                </div>
+                <textarea id="mml" readonly></textarea>
+                <span id="mmlCaption"></span>
+            </div>
+        </section>
+        <h2>概要</h2>
+        <section class="settings">
+            <div class="item">
+                このツールはApache 2.0 Licenseで配布されている成果物を使用しています<br>
+                <a href="https://github.com/SheetJS/bessel">bessel</a><br>
+                <span id="ac4Trigger">
+                    <span id="ac4Icon" class="ac-icon-close"></span>
+                    <span id="ac4Summary" class="ac-summary">Apache 2.0 License</span>
+                </span>
+                <div id="ac4Content" class="ac-content-close">
+                    <object data="Apach-LICENSE-2.0.txt" width="100%" type="text/plain"></object>
+                </div>
+            </div>
+        </section>
+        <h3 id="dtrigger">更新履歴</h3>
+        <section class="history">
+            <div class="item">
+                2018/10/28 公開
+            </div>
+        </section>
+        <span id="ac1Trigger">
+            <span id="ac1Icon" class="ac-icon-close"></span>
+        </span>
+        <div id="ac1Content" class="ac-content-close settings">
+            <div class="item">
+                <span class="item-name">補間方法</span>
+                <div class="radio-list">
+                    <label>
+                        <input type="radio" name="convAL" value="NN" />
+                        <div class="radio-caption">
+                            <span class="convAL-name">最近傍補間</span>
+                            <span class="input-caption">低音質 低負荷</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="convAL" value="Lerp">
+                        <div class="radio-caption">
+                            <span class="convAL-name">線形補間</span>
+                            <span class="input-caption">低音質 低負荷</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="convAL" value="SincHamming" />
+                        <div class="radio-caption">
+                            <span class="convAL-name">Sinc補間(一般化ハミング窓)</span>
+                            <span class="window-confname">Window Size</span>
+                            <input id="hammingWindowSize" type="text" value="64" />
+                            <span class="window-confname">a</span>
+                            <input id="hammingParameter" type="text" value="0.54" />
+                            <span class="input-caption">高音質 中負荷</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="convAL" value="SincBlackman" />
+                        <div class="radio-caption">
+                            <span class="convAL-name">Sinc補間(ブラックマン-ナットール窓)</span>
+                            <span class="window-confname">Window Size</span>
+                            <input id="blackmanWindowSize" type="text" value="64" />
+                            <span class="input-caption">高音質 中負荷</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="convAL" value="SincKaiser" checked="checked" />
+                        <div class="radio-caption">
+                            <span class="convAL-name">Sinc補間(カイザー窓)</span>
+                            <span class="window-confname">Window Size</span>
+                            <input id="kaiserWindowSize" type="text" value="64" />
+                            <span class="window-confname">beta</span>
+                            <input id="kaiserBeta" type="text" value="6" />
+                            <span class="input-caption">高音質 中負荷</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="convAL" value="Sinc" />
+                        <div class="radio-caption">
+                            <span class="convAL-name">Sinc補間(窓なし)</span>
+                            <span class="input-caption">高音質 超高負荷</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="item">
+                <span class="item-name">(Sinc)ナイキスト周波数に対する比</span>
+                <input id="nyquistFreqRetio" value="1.0">
+                <span class="input-caption">ナイキスト周波数を1として、LPFカットオフ値を入力</span>
+            </div>
+            <div class="item">
+                <span class="item-name">サンプリングレートを手動入力</span>
+                <label>
+                    <input type="radio" name="rate-manual" value="true" />
+                    <span>する</span>
+                </label>
+                <label>
+                    <input type="radio" name="rate-manual" value="false" checked="checked" />
+                    <span>しない</span>
+                </label>
+                <input id="rate" type="text" value="22050" /><span>Hz</span>
+                <span class="input-caption">性能を確かめるため</span>
+            </div>
+            <div class="item">
+                <span class="item-name">8bit変換時の音量補正</span>
+                <label>
+                    <input type="radio" name="convBitAmp" value="true" checked="checked" />
+                    <span>自動補正</span>
+                </label>
+                <label>
+                    <input type="radio" name="convBitAmp" value="false" />
+                    <span>手動補正</span>
+                </label>
+                <div id="ac3Trigger">
+                    <span id="ac3Icon" class="ac-icon-close"></span>
+                    <span id="ac3Summary">補正値</span>
+                </div>
+                <div id="ac3Content" class="ac-content-close">
+                    <div id="ampList">
+                    </div>
+                </div>
+                <span class="input-caption">8bit変換時のノイズ軽減</span>
+            </div>
+            <div class="item">
+                <button id="convBit">再ビット変換</button>
+            </div>
+            <div class="item">
+                <span class="item-name">処理の分割数</span>
+                <input id="nWorker" value="1">
+                <span class="input-caption">増やしてもメモリとCPUを食いつぶすだけ</span>
+                <span class="input-caption" id="concurrency">navigator.hardwareConcurrency </span>
+            </div>
+            <div class="item">
+                <button id="saveWav">レート変換後PCMをwavファイルとして出力</button>
+            </div>
+            <div class="item">
+                <button id="saveWav8bit">8bitPCMをwavファイルとして出力</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

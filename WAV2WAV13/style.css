@@ -1,0 +1,123 @@
+body {
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Hiragino Kaku Gothic ProN,"メイリオ",meiryo,sans-serif;
+}
+
+h1 {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1rem;
+    border-left: 10px solid darkblue;
+    border-bottom: 1px solid darkblue;
+    padding: 0rem 0rem 0rem .5rem;
+    margin: 1.0rem 0rem 0.5rem 0rem;
+}
+
+h2:first-of-type {
+    margin: .0rem 0rem 0.5rem 0rem;
+}
+
+h3 {
+    font-size: 0.8rem;
+    margin: 1.0rem 0rem 0.5rem 0rem;
+}
+
+.main {
+    width: 50rem;
+    margin: 0px auto 0px auto;
+    padding: 0px;
+    border: 0px solid white;
+    background: white;
+    font-size: .8rem;
+}
+
+section {
+    border: 1px solid lightgray;
+    border-radius: .5rem;
+    padding: 0.0rem 0.5rem 0rem 0.5rem;
+    background: white;
+}
+
+.item {
+    margin: .5rem 0rem .5rem 0rem;
+    padding: .0rem 0rem .0rem 0rem;
+}
+
+.item-name {
+    display: inline-block;
+    width: 10rem;
+    font-size: 1.0rem;
+    font-weight: bold;
+}
+
+.input-caption {
+    display: block;
+    color: gray;
+}
+
+#convCaption {
+    color: gray;
+}
+
+.radio-caption {
+    display: inline-block;
+}
+
+.convAL-name {
+    display: block;
+}
+
+.macro-label {
+    display: block;
+}
+
+input[name="convAL"] {
+    vertical-align: top;
+}
+
+.radio-list>label {
+    display: block;
+}
+
+#ampList>label {
+    display: block;
+}
+
+textarea {
+    width: 100%;
+    height: 15rem;
+    resize: none;
+    font-size: 0.8rem;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ac-icon-close {
+    height: 0rem;
+    width: 0rem;
+    border-top: 0.25rem solid transparent;
+    border-left: 0.5rem solid black;
+    border-bottom: 0.25rem solid transparent; 
+}
+
+.ac-icon-open {
+    height: 0rem;
+    width: 0rem;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.5rem solid black;
+    border-left: 0.25rem solid transparent; 
+}
+
+.ac-content-close {
+    display: none;
+}
+
+.ac-content-open {
+    display: block;
+}
+
+.ac-icon-open, .ac-icon-close, .ac-summary {
+    display: inline-block;
+}
