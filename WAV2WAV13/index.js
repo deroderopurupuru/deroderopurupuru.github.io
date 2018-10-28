@@ -373,14 +373,14 @@ function writeMML(ampList) {
     var currentAmp;
     var i;
 
-    var initialMacro = "$INIT = @X127 @E1,0,0,512,0 " + "@D" + detune + " " + "Q16 o5" + ";";
+    // var initialMacro = "$INIT = @X127 @E1,0,0,512,0 " + "@D" + detune + " " + "Q16 o5" + ";";
 
     var macro_allwav13def = function (name, str) {
         if (!getElement("checkALL").checked) {
             return;
         }
         macroName = macroBaseName + name;
-        macroStr = str + "$INIT ";
+        macroStr = str + "@X127 @E1,0,0,512,0 " + "@D" + detune + " " + "Q16 o5 ";
         for (i = 0; i < nWav13Def; i++) {
             currentAmp = ampList[i];
             // macroStr += "\n\t";
@@ -415,7 +415,7 @@ function writeMML(ampList) {
     cancel: for (i = 0; i < notevalue.length; i++) {
         amp = 1.0;
         macroName = macroBaseName + notevalue[i].note;
-        macroStr = "$INIT ";
+        macroStr = "@X127 @E1,0,0,512,0 " + "@D" + detune + " " + "Q16 o5 ";
         var number = 0;
         var noteTick = notevalue[i].tick;
         // tickカウントを使い切るかWAV13定義を使い切るまで
@@ -472,7 +472,6 @@ function writeMML(ampList) {
     box.value = "";
 
     if (getElement("outMacroDef").checked) {
-        box.value += initialMacro + "\n";
         for (i = 0; i < macroDefs.length; i++) {
             box.value += "$" + macroDefs[i].name + " = ";
             box.value += macroDefs[i].str + " " + macroDefs[i].str2 + ";\n";
